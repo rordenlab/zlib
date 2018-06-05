@@ -27,6 +27,8 @@
 /configure.log
 /zconf.h
 
+/build/
+
 .DS_Store
 
 /build
