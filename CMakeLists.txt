@@ -49,6 +49,16 @@ configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/zconf.h.cmakein
         ${CMAKE_CURRENT_BINARY_DIR}/zconf.h @ONLY)
 include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_SOURCE_DIR})
 
+# Generate zlib.pc
+set(ZLIB_PC ${CMAKE_CURRENT_BINARY_DIR}/zlib.pc)
+configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/zlib.pc.cmakein
+        ${ZLIB_PC} @ONLY)
+
+# Generate zcon.h
+configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/zconf.h.cmakein
+        ${CMAKE_CURRENT_BINARY_DIR}/zconf.h @ONLY)
+include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_SOURCE_DIR})
+
 # Mark OSX settings as advanced
 if(APPLE)
     mark_as_advanced(CMAKE_OSX_ARCHITECTURES CMAKE_OSX_DEPLOYMENT_TARGET CMAKE_OSX_SYSROOT)
