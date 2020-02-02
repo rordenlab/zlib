@@ -26,6 +26,7 @@
 /Makefile
 /configure.log
 /zconf.h
+/zconf.h.included
 
 /build/
 
