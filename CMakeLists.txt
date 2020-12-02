@@ -84,17 +84,13 @@ if(UNIX OR MINGW)
     if(ARM_CRC)
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=armv8-a+crc")
     else()
-        check_c_compiler_flag(-msse2 HAS_SSE2)
-        if(HAS_SSE2)
-            set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -msse2")
-            add_definitions(-DHAS_SSE2)
-        endif()
+        # SSE2 support
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -msse2")
+        add_definitions(-DHAS_SSE2)
 
-        check_c_compiler_flag(-mssse3 HAS_SSSE3)
-        if(HAS_SSSE3)
-            set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mssse3")
-            add_definitions(-DHAS_SSSE3)
-        endif()
+        # SSSE3 support
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mssse3")
+        add_definitions(-DHAS_SSSE3)
 
         check_c_compiler_flag(-msse4.2 HAS_SSE42)
         if(HAS_SSE42)
@@ -163,24 +159,20 @@ if(UNIX OR MINGW)
         add_definitions(-DINFLATE_CHUNK_SIMD_NEON)
         add_definitions(-DINFLATE_CHUNK_READ_64LE)
         add_definitions(-DADLER32_SIMD_NEON)
-    endif()
-
-    # append "inffast_chunk.c" and compile with "sse2" if supported by compiler
-    if(HAS_SSE2)
+    else()
+        # append "inffast_chunk.c" and compile with "sse2" if supported by compiler
         list(APPEND ZLIB_SRCS inffast_chunk.c)
         add_definitions(-DINFLATE_CHUNK_SIMD_SSE2)
         add_definitions(-DINFLATE_CHUNK_READ_64LE)
-    endif()
 
-    # append "adler32_simd.c" and compile with "ssse3" if supported by compiler
-    if(HAS_SSSE3)
+        # append "adler32_simd.c" and compile with "ssse3" if supported by compiler
         list(APPEND ZLIB_SRCS adler32_simd.c)
         add_definitions(-DADLER32_SIMD_SSSE3)
-    endif()
 
-    # append "crc_simd.c" and compile with "pclmul" if supported by compiler
-    if(HAS_PCLMUL)
-        list(APPEND ZLIB_SRCS crc32_simd.c)
+        # append "crc_simd.c" and compile with "pclmul" if supported by compiler
+        if(HAS_PCLMUL)
+            list(APPEND ZLIB_SRCS crc32_simd.c)
+        endif()
     endif()
 endif()
 
