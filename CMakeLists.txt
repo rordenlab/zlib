@@ -34,23 +34,10 @@ endif()
 # Set -fPIC option
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-# Set -fPIC option
-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-
 # parse the full version number from zlib.h and include in ZLIB_VERSION
 file(READ ${CMAKE_CURRENT_SOURCE_DIR}/zlib.h _zlib_h_contents)
 string(REGEX REPLACE ".*#define[ \t]+ZLIB_VERSION[ \t]+\"([-0-9A-Za-z.]+)\".*"
     "\\1" ZLIB_VERSION ${_zlib_h_contents})
-
-# Generate zlib.pc
-set(ZLIB_PC ${CMAKE_CURRENT_BINARY_DIR}/zlib.pc)
-configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/zlib.pc.cmakein
-        ${ZLIB_PC} @ONLY)
-
-# Generate zcon.h
-configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/zconf.h.cmakein
-        ${CMAKE_CURRENT_BINARY_DIR}/zconf.h @ONLY)
-include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_SOURCE_DIR})
 
 # Generate zlib.pc
 set(ZLIB_PC ${CMAKE_CURRENT_BINARY_DIR}/zlib.pc)
@@ -173,14 +160,6 @@ if(UNIX OR MINGW)
         if(HAS_PCLMUL)
             list(APPEND ZLIB_SRCS crc32_simd.c)
         endif()
-    endif()
-endif()
-
-# support crc intrinsics for ARM CPUs
-if(UNIX)
-    check_c_compiler_flag(-march=armv8-a+crc HAS_CRC)
-    if(HAS_CRC)
-    	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=armv8-a+crc")
     endif()
 endif()
 

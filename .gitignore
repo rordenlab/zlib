@@ -23,13 +23,6 @@
 /zlib.pc
 /zconf.h.included
 
-/Makefile
-/configure.log
-/zconf.h
-/zconf.h.included
-
-/build/
-
 .DS_Store
 
 /build
