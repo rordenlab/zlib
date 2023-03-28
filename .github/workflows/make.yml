@@ -1,21 +1,18 @@
-name: Makefile CI
+name: Makefile
 
-on:
-  push:
-    branches: [ gcc.amd64 ]
-  pull_request:
-    branches: [ gcc.amd64 ]
+on: [push]
 
 jobs:
   build:
 
     runs-on: ${{ matrix.os }}
+
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: configure
       run: ./configure
     - name: make
