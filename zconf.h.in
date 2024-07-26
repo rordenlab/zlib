@@ -1,5 +1,5 @@
 /* zconf.h -- configuration of the zlib compression library
- * Copyright (C) 1995-2013 Jean-loup Gailly.
+ * Copyright (C) 1995-2016 Jean-loup Gailly, Mark Adler
  * For conditions of distribution and use, see copyright notice in zlib.h
  */
 
@@ -17,7 +17,7 @@
 #ifdef Z_PREFIX     /* may be set to #if 1 by ./configure */
 #  define Z_PREFIX_SET
 
-/* all linked symbols */
+/* all linked symbols and init macros */
 #  define _dist_code            z__dist_code
 #  define _length_code          z__length_code
 #  define _tr_align             z__tr_align
@@ -224,9 +224,24 @@
 #  define z_const
 #endif
 
-/* Some Mac compilers merge all .h files incorrectly: */
-#if defined(__MWERKS__)||defined(applec)||defined(THINK_C)||defined(__SC__)
-#  define NO_DUMMY_DECL
+#ifndef Z_SOLO
+#  ifdef NO_SIZE_T
+     typedef unsigned NO_SIZE_T z_size_t;
+#  else
+#    include <stddef.h>
+     typedef size_t z_size_t;
+#  endif
+#  ifdef NO_SSIZE_T
+     typedef NO_SSIZE_T z_ssize_t;
+#  else
+#    include <stddef.h>
+#    include <sys/types.h>
+#    ifdef _MSC_VER
+       typedef intptr_t z_ssize_t;
+#    else
+       typedef ssize_t z_ssize_t;
+#    endif
+#  endif
 #endif
 
 /* Maximum value for memLevel in deflateInit2 */
@@ -259,24 +274,6 @@
  that is, 32K for windowBits=15 (default value) plus a few kilobytes
  for small objects.
 */
-
-                        /* Type declarations */
-
-#ifndef OF /* function prototypes */
-#  ifdef STDC
-#    define OF(args)  args
-#  else
-#    define OF(args)  ()
-#  endif
-#endif
-
-#ifndef Z_ARG /* function prototypes for stdarg */
-#  if defined(STDC) || defined(Z_HAVE_STDARG_H)
-#    define Z_ARG(args)  args
-#  else
-#    define Z_ARG(args)  ()
-#  endif
-#endif
 
 /* The following definitions for FAR are needed only for MSDOS mixed
  * model programming (small or medium model with some far allocations).
@@ -325,6 +322,9 @@
 #  ifdef ZLIB_WINAPI
 #    ifdef FAR
 #      undef FAR
+#    endif
+#    ifndef WIN32_LEAN_AND_MEAN
+#      define WIN32_LEAN_AND_MEAN
 #    endif
 #    include <windows.h>
      /* No need for _export, use ZLIB.DEF instead. */
@@ -488,7 +488,7 @@ typedef uLong FAR uLongf;
 #if !defined(_WIN32) && defined(Z_LARGE64)
 #  define z_off64_t off64_t
 #else
-#  if defined(_WIN32) && !defined(__GNUC__) && !defined(Z_SOLO)
+#  if defined(_WIN32) && !defined(__GNUC__)
 #    define z_off64_t __int64
 #  else
 #    define z_off64_t z_off_t

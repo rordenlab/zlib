@@ -1,5 +1,5 @@
 /* deflate.h -- internal compression state
- * Copyright (C) 1995-2012 Jean-loup Gailly
+ * Copyright (C) 1995-2018 Jean-loup Gailly
  * For conditions of distribution and use, see copyright notice in zlib.h
  */
 
@@ -234,7 +234,7 @@ typedef struct internal_state {
     uint32_t matches;       /* number of string matches in current block */
     uint32_t insert;        /* bytes at end of window left to insert */
 
-#ifdef DEBUG
+#ifdef ZLIB_DEBUG
     uint64_t compressed_len; /* total bit length of compressed file mod 2^32 */
     uint64_t bits_sent;      /* bit length of compressed data sent mod 2^32 */
 #endif

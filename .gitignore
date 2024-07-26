@@ -22,9 +22,13 @@
 /minigzipsh
 /zlib.pc
 /zconf.h.included
+/configure.log
 
 .DS_Store
 
 /build
 /Makefile
 /configure.log
+
+/target
+Cargo.lock
