@@ -109,6 +109,8 @@ elseif(MSVC)
     add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
     add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)
 
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4244")
+
     check_c_compiler_flag(/arch:AVX HAS_AVX)
     if (HAS_AVX)
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /arch:AVX")
